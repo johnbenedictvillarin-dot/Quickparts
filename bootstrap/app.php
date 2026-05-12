@@ -1,4 +1,5 @@
 <?php
+
 // Fix temp directory for Railway
 if (!is_dir('/tmp/views')) {
     mkdir('/tmp/views', 0777, true);
