@@ -1,4 +1,17 @@
 <?php
+// Fix temp directory for Railway
+if (!is_dir('/tmp/views')) {
+    mkdir('/tmp/views', 0777, true);
+}
+if (!is_dir('/tmp/cache')) {
+    mkdir('/tmp/cache', 0777, true);
+}
+if (!is_dir('/tmp/sessions')) {
+    mkdir('/tmp/sessions', 0777, true);
+}
+putenv('TMPDIR=/tmp');
+ini_set('upload_tmp_dir', '/tmp');
+ini_set('session.save_path', '/tmp/sessions');
 
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
