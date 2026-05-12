@@ -17,39 +17,45 @@
                     <th class="text-left py-2">Order #</th>
                     <th class="text-left py-2">Customer</th>
                     <th class="text-left py-2">Total</th>
-                    <th class="text-left py-2">Status</th>
+                    <th class="text-left py-2">Delivery Status</th>
+                    <th class="text-left py-2">Est. Delivery</th>
+                    <th class="text-left py-2">Order Status</th>
                     <th class="text-left py-2">Date</th>
                     <th class="text-left py-2">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($orders as $order)
+                @foreach($orders as $order)
                     <tr class="border-b">
                         <td class="py-2">{{ $order->order_number }}</td>
-                        <td class="py-2">{{ $order->user->name ?? 'N/A' }}</td>
+                        <td class="py-2">{{ $order->user->name }}</td>
                         <td class="py-2">₱{{ number_format($order->total_amount, 2) }}</td>
                         <td class="py-2">
-                            <form method="POST" action="{{ url('/admin/orders/' . $order->id . '/status') }}" class="inline-block">
-                                @csrf
-                                @method('PUT')
-                                <select name="status" onchange="this.form.submit()" class="text-sm border rounded px-2 py-1">
-                                    <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                    <option value="processing" {{ $order->status == 'processing' ? 'selected' : '' }}>Processing</option>
-                                    <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Completed</option>
-                                    <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
-                                </select>
-                            </form>
+                            {!! $order->delivery_status_badge !!}
+                        </tr>
+                        <td class="py-2">
+                            @if($order->estimated_delivery_date)
+                                {{ $order->estimated_delivery_date->format('M d, Y') }}
+                            @else
+                                N/A
+                            @endif
+                        </td>
+                        <td class="py-2">
+                            <span class="px-2 py-1 rounded text-xs 
+                                @if($order->status == 'pending') bg-yellow-100 text-yellow-800
+                                @elseif($order->status == 'processing') bg-blue-100 text-blue-800
+                                @elseif($order->status == 'completed') bg-green-100 text-green-800
+                                @else bg-red-100 text-red-800
+                                @endif">
+                                {{ ucfirst($order->status) }}
+                            </span>
                         </td>
                         <td class="py-2">{{ $order->created_at->format('M d, Y') }}</td>
                         <td class="py-2">
-                            <a href="{{ url('/admin/orders/' . $order->id . '/details') }}" class="text-blue-600 hover:underline">View Details</a>
+                            <a href="{{ route('admin.orders.details', $order->id) }}" class="text-blue-600 hover:underline">View Details</a>
                         </td>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="6" class="text-center py-4 text-gray-500">No orders found</td>
-                    </tr>
-                @endforelse
+                @endforeach
             </tbody>
         </table>
     </div>

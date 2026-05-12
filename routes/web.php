@@ -63,3 +63,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/customers/{userId}/orders', [AdminController::class, 'customerOrders'])->name('customers.orders');
     Route::get('/sales-report', [AdminController::class, 'salesReport'])->name('sales.report');
 });
+
+// Admin routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    // ... existing routes ...
+    
+    // Delivery management routes
+    Route::put('/orders/{id}/delivery-status', [AdminController::class, 'updateDeliveryStatus'])->name('orders.delivery-status');
+    Route::put('/orders/{id}/estimated-delivery', [AdminController::class, 'updateEstimatedDelivery'])->name('orders.estimated-delivery');
+});

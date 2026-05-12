@@ -72,3 +72,14 @@ class ProductSeeder extends Seeder
         }
     }
 }
+
+// In ProductSeeder.php
+use Illuminate\Support\Facades\File;
+
+// Copy images from seeder folder to storage
+if (File::exists(database_path('seeders/product_images'))) {
+    File::copyDirectory(
+        database_path('seeders/product_images'),
+        storage_path('app/public/products')
+    );
+}

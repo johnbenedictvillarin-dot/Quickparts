@@ -44,3 +44,16 @@
     @endif
 </div>
 @endsection
+
+<th class="text-left py-2">Payment</th>
+<td class="py-2">
+    @if($order->payment_method == 'cod')
+        <span class="text-xs bg-gray-100 px-2 py-1 rounded">COD</span>
+    @else
+        @if($order->payment_status == 'paid')
+            <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Paid</span>
+        @else
+            <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">Awaiting</span>
+        @endif
+    @endif
+</td>
