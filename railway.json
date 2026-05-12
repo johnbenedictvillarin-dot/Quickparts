@@ -1,9 +1,0 @@
-{
-  "build": {
-    "builder": "nixpacks",
-    "buildCommand": "mkdir -p storage/framework/views storage/framework/cache storage/framework/sessions storage/logs bootstrap/cache && chmod -R 777 storage bootstrap/cache && composer install --no-dev --optimize-autoloader"
-  },
-  "start": {
-    "web": "php artisan serve --host=0.0.0.0 --port=8080"
-  }
-}
