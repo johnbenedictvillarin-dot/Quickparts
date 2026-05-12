@@ -1,7 +1,7 @@
 {
   "build": {
     "builder": "nixpacks",
-    "buildCommand": "mkdir -p /tmp/views /tmp/cache /tmp/sessions && composer install --no-dev --optimize-autoloader"
+    "buildCommand": "mkdir -p /tmp/views /tmp/cache /tmp/sessions && chmod -R 777 /tmp/views /tmp/cache /tmp/sessions && composer install --no-dev --optimize-autoloader"
   },
   "start": {
     "web": "php artisan serve --host=0.0.0.0 --port=8080"
