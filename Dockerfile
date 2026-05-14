@@ -1,49 +1,32 @@
-FROM php:8.2-apache
+FROM php:8.2-fpm-alpine
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    git \
+RUN apk add --no-cache \
+    nginx \
     curl \
+    libpng-dev \
+    libxml2-dev \
+    oniguruma-dev \
     zip \
     unzip \
-    libzip-dev \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev
+    bash
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
-# Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working directory
 WORKDIR /app
 
-# Copy application files
 COPY . .
 
-# Install dependencies
-RUN composer install --no-interaction --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader
 
-# Create storage directories
-RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache
 RUN chmod -R 777 storage bootstrap/cache
 
-# Configure Apache
-RUN chown -R www-data:www-data /app
-RUN a2enmod rewrite
-RUN echo '<VirtualHost *:80>\n\
-    DocumentRoot /app/public\n\
-    <Directory /app/public>\n\
-        Options -Indexes +FollowSymLinks\n\
-        AllowOverride All\n\
-        Require all granted\n\
-    </Directory>\n\
-</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
+COPY docker/nginx.conf /etc/nginx/http.d/default.conf
+COPY docker/start.sh /start.sh
 
-# Expose port
-EXPOSE 80
+RUN chmod +x /start.sh
 
-# Start Apache
-CMD ["apache2-foreground"]
+EXPOSE 8080
+
+ENTRYPOINT ["/start.sh"]
