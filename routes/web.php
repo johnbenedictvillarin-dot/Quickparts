@@ -47,7 +47,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 });
 
-// Admin routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/products', [AdminController::class, 'products'])->name('products');
@@ -59,16 +58,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/orders', [AdminController::class, 'orders'])->name('orders');
     Route::get('/orders/{orderId}/details', [AdminController::class, 'orderDetails'])->name('orders.details');
     Route::put('/orders/{id}/status', [AdminController::class, 'updateOrderStatus'])->name('orders.status');
+    Route::put('/orders/{id}/delivery-status', [AdminController::class, 'updateDeliveryStatus'])->name('orders.delivery-status');
+    Route::put('/orders/{id}/estimated-delivery', [AdminController::class, 'updateEstimatedDelivery'])->name('orders.estimated-delivery');
     Route::get('/customers', [AdminController::class, 'allCustomers'])->name('customers.all');
     Route::get('/customers/{userId}/orders', [AdminController::class, 'customerOrders'])->name('customers.orders');
     Route::get('/sales-report', [AdminController::class, 'salesReport'])->name('sales.report');
-});
-
-// Admin routes
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    // ... existing routes ...
-    
-    // Delivery management routes
-    Route::put('/orders/{id}/delivery-status', [AdminController::class, 'updateDeliveryStatus'])->name('orders.delivery-status');
-    Route::put('/orders/{id}/estimated-delivery', [AdminController::class, 'updateEstimatedDelivery'])->name('orders.estimated-delivery');
 });
