@@ -38,10 +38,10 @@
             <div class="flex items-center gap-3">
                 <span class="text-gray-600 text-sm">Sort by:</span>
                 <select id="sortBy" onchange="sortProducts()" class="border rounded-lg px-3 py-2 text-sm">
-                    <option value="newest">Newest</option>
-                    <option value="price_low">Price: Low to High</option>
-                    <option value="price_high">Price: High to Low</option>
-                    <option value="rating">Top Rated</option>
+                    <option value="newest" {{ request('sort') == 'newest' || !request('sort') ? 'selected' : '' }}>Newest</option>
+                    <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>Price: Low to High</option>
+                    <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Price: High to Low</option>
+                    <option value="rating" {{ request('sort') == 'rating' ? 'selected' : '' }}>Top Rated</option>
                 </select>
             </div>
         </div>

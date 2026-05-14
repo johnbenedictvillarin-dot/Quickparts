@@ -21,7 +21,22 @@ class ProductController extends Controller
             $query->where('category_id', $request->category);
         }
         
-        $products = $query->paginate(12);
+        switch ($request->sort) {
+            case 'price_low':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_high':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'rating':
+                $query->orderBy('rating', 'desc');
+                break;
+            default:
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
+        
+        $products = $query->paginate(12)->appends($request->query());
         $categories = Category::all();
         
         return view('products.index', compact('products', 'categories'));
