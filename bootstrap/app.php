@@ -14,16 +14,18 @@ ini_set('upload_tmp_dir', $tempDir);
 ini_set('session.save_path', $tempDir . '/sessions');
 ini_set('sys_temp_dir', $tempDir);
 
+$basePath = dirname(__DIR__);
+
 // Create necessary directories
 $dirs = [
     $tempDir . '/views',
     $tempDir . '/sessions',
     $tempDir . '/cache',
-    storage_path('logs'),
-    storage_path('framework/cache'),
-    storage_path('framework/sessions'),
-    storage_path('framework/views'),
-    base_path('bootstrap/cache'),
+    $basePath . '/storage/logs',
+    $basePath . '/storage/framework/cache',
+    $basePath . '/storage/framework/sessions',
+    $basePath . '/storage/framework/views',
+    $basePath . '/bootstrap/cache',
 ];
 
 foreach ($dirs as $dir) {
