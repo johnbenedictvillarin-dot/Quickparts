@@ -25,63 +25,56 @@
         </h2>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Current Delivery Status Display -->
-            <div class="bg-white rounded-lg p-4">
-                <p class="text-sm text-gray-500 mb-1">Current Delivery Status</p>
-                <div class="text-lg font-semibold mb-3">
-                    {!! $order->delivery_status_badge !!}
+            <form method="POST" action="{{ route('admin.orders.delivery-status', $order->id) }}" class="contents">
+                @csrf
+                @method('PUT')
+                
+                <!-- Current Delivery Status Display -->
+                <div class="bg-white rounded-lg p-4">
+                    <p class="text-sm text-gray-500 mb-1">Current Delivery Status</p>
+                    <div class="text-lg font-semibold mb-3">
+                        {!! $order->delivery_status_badge !!}
+                    </div>
+                    
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Update Delivery Status</label>
+                    <select name="delivery_status" class="w-full border rounded px-3 py-2 mb-3">
+                        <option value="pending" {{ $order->delivery_status == 'pending' ? 'selected' : '' }}>⏳ Pending</option>
+                        <option value="processing" {{ $order->delivery_status == 'processing' ? 'selected' : '' }}>🔄 Processing</option>
+                        <option value="shipped" {{ $order->delivery_status == 'shipped' ? 'selected' : '' }}>📦 Shipped</option>
+                        <option value="delivered" {{ $order->delivery_status == 'delivered' ? 'selected' : '' }}>✅ Delivered</option>
+                        <option value="cancelled" {{ $order->delivery_status == 'cancelled' ? 'selected' : '' }}>❌ Cancelled</option>
+                    </select>
                 </div>
                 
-                <form method="POST" action="{{ route('admin.orders.delivery-status', $order->id) }}" class="mt-3">
-                    @csrf
-                    @method('PUT')
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Update Delivery Status</label>
-                    <div class="flex gap-2">
-                        <select name="delivery_status" class="border rounded px-3 py-2 flex-1">
-                            <option value="pending" {{ $order->delivery_status == 'pending' ? 'selected' : '' }}>⏳ Pending</option>
-                            <option value="processing" {{ $order->delivery_status == 'processing' ? 'selected' : '' }}>🔄 Processing</option>
-                            <option value="shipped" {{ $order->delivery_status == 'shipped' ? 'selected' : '' }}>📦 Shipped</option>
-                            <option value="delivered" {{ $order->delivery_status == 'delivered' ? 'selected' : '' }}>✅ Delivered</option>
-                            <option value="cancelled" {{ $order->delivery_status == 'cancelled' ? 'selected' : '' }}>❌ Cancelled</option>
-                        </select>
-                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                            Update
-                        </button>
-                    </div>
-                </form>
-            </div>
-            
-            <!-- Estimated Delivery Date Management -->
-            <div class="bg-white rounded-lg p-4">
-                <p class="text-sm text-gray-500 mb-1">Estimated Delivery Date</p>
-                <p class="text-lg font-semibold text-green-600 mb-3">
-                    @if($order->estimated_delivery_date)
-                        {{ $order->estimated_delivery_date->format('F d, Y') }}
-                        @if($order->estimated_delivery_date->isToday())
-                            (Today!)
-                        @elseif($order->estimated_delivery_date->isTomorrow())
-                            (Tomorrow)
+                <!-- Estimated Delivery Date Management -->
+                <div class="bg-white rounded-lg p-4">
+                    <p class="text-sm text-gray-500 mb-1">Estimated Delivery Date</p>
+                    <p class="text-lg font-semibold text-green-600 mb-3">
+                        @if($order->estimated_delivery_date)
+                            {{ $order->estimated_delivery_date->format('F d, Y') }}
+                            @if($order->estimated_delivery_date->isToday())
+                                (Today!)
+                            @elseif($order->estimated_delivery_date->isTomorrow())
+                                (Tomorrow)
+                            @endif
+                        @else
+                            Not set
                         @endif
-                    @else
-                        Not set
-                    @endif
-                </p>
-                
-                <form method="POST" action="{{ route('admin.orders.estimated-delivery', $order->id) }}" class="mt-3">
-                    @csrf
-                    @method('PUT')
+                    </p>
+                    
                     <label class="block text-sm font-medium text-gray-700 mb-2">Edit Estimated Delivery</label>
-                    <div class="flex gap-2">
-                        <input type="date" name="estimated_delivery_date" 
-                               value="{{ $order->estimated_delivery_date ? $order->estimated_delivery_date->format('Y-m-d') : '' }}"
-                               min="{{ date('Y-m-d') }}"
-                               class="border rounded px-3 py-2 flex-1">
-                        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                            Save
-                        </button>
-                    </div>
-                </form>
-            </div>
+                    <input type="date" name="estimated_delivery_date" 
+                           value="{{ $order->estimated_delivery_date ? $order->estimated_delivery_date->format('Y-m-d') : '' }}"
+                           min="{{ date('Y-m-d') }}"
+                           class="w-full border rounded px-3 py-2">
+                </div>
+                
+                <div class="col-span-1 md:col-span-2 text-center mt-2">
+                    <button type="submit" class="bg-blue-500 text-white px-8 py-3 rounded-lg hover:bg-blue-600 font-semibold text-lg">
+                        💾 Save Delivery Information
+                    </button>
+                </div>
+            </form>
         </div>
         
         <!-- Delivery Progress Bar -->

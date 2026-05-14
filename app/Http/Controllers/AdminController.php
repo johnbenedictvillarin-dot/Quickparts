@@ -71,18 +71,21 @@ class AdminController extends Controller
             $imagePath = $image->storeAs('products', $imageName, 'public');
         }
 
-        Product::create([
-            'name' => $request->name,
-            'slug' => $slug,
-            'description' => $request->description,
-            'price' => $request->price,
-            'stock' => $request->stock,
-            'category_id' => $request->category_id,
-            'image' => $imagePath,
-            'is_active' => $request->has('is_active'),
-        ]);
+        Product::updateOrCreate(
+            ['slug' => $slug],
+            [
+                'name' => $request->name,
+                'slug' => $slug,
+                'description' => $request->description,
+                'price' => $request->price,
+                'stock' => $request->stock,
+                'category_id' => $request->category_id,
+                'image' => $imagePath,
+                'is_active' => $request->has('is_active'),
+            ]
+        );
 
-        return redirect()->route('admin.products')->with('success', 'Product created successfully!');
+        return redirect()->route('admin.products')->with('success', 'Product saved successfully!');
     }
 
     public function editProduct($id)
@@ -169,7 +172,8 @@ class AdminController extends Controller
     {
         $order = Order::findOrFail($id);
         $request->validate([
-            'delivery_status' => 'required|in:pending,processing,shipped,delivered,cancelled'
+            'delivery_status' => 'required|in:pending,processing,shipped,delivered,cancelled',
+            'estimated_delivery_date' => 'nullable|date'
         ]);
 
         $order->delivery_status = $request->delivery_status;
@@ -177,10 +181,14 @@ class AdminController extends Controller
         if ($request->delivery_status == 'delivered') {
             $order->actual_delivery_date = now();
         }
+
+        if ($request->filled('estimated_delivery_date')) {
+            $order->estimated_delivery_date = $request->estimated_delivery_date;
+        }
         
         $order->save();
 
-        return redirect()->back()->with('success', 'Delivery status updated successfully!');
+        return redirect()->back()->with('success', 'Delivery information updated successfully!');
     }
 
     public function updateEstimatedDelivery(Request $request, $id)

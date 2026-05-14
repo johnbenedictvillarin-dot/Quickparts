@@ -2,11 +2,17 @@
 
 @section('content')
 <div class="max-w-md mx-auto bg-white rounded-lg shadow p-6">
-    <h1 class="text-2xl font-bold mb-6 text-center">Verify Your Email</h1>
+    <h1 class="text-2xl font-bold mb-6 text-center">Verify Your Identity</h1>
+    
+    <div class="text-center mb-4">
+        <div class="text-5xl mb-3">🔐</div>
+        <p class="text-gray-600">We've sent a verification code to:</p>
+        <p class="font-bold text-gray-800">{{ session('email') }}</p>
+    </div>
     
     @if(session('success'))
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            {!! session('success') !!}
+            {{ session('success') }}
         </div>
     @endif
     
@@ -30,44 +36,61 @@
         </div>
     @endif
     
-    <!-- Send Code Form -->
-    <form method="POST" action="{{ route('send.otp') }}" class="mb-6">
+    <!-- Verify OTP Form -->
+    <form method="POST" action="{{ route('verify.otp') }}" class="mb-6">
         @csrf
+        
         <div class="mb-4">
-            <label class="block text-gray-700 mb-2">Email Address</label>
-            <input type="email" name="email" value="{{ old('email') ?? session('email') }}" required 
-                   class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500"
-                   placeholder="your@email.com">
+            <label class="block text-gray-700 mb-2 text-center">Enter 6-digit OTP Code</label>
+            <input type="text" name="otp" required placeholder="000000" maxlength="6" autofocus
+                   class="w-full border rounded px-4 py-3 text-center text-2xl tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500"
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '')">
         </div>
-        <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-            Send Verification Code
+        
+        <button type="submit" class="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition font-semibold">
+            Verify & Continue
         </button>
     </form>
     
-    <!-- Verify Code Form -->
-    <form method="POST" action="{{ route('verify.otp') }}" class="border-t pt-6">
-        @csrf
-        <h2 class="text-lg font-bold mb-4">Enter Verification Code</h2>
-        
-        <div class="mb-4">
-            <label class="block text-gray-700 mb-2">Email Address</label>
-            <input type="email" name="email" value="{{ old('email') }}" required 
-                   class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500">
-        </div>
-        
-        <div class="mb-4">
-            <label class="block text-gray-700 mb-2">Verification Code</label>
-            <input type="text" name="otp" required placeholder="Enter 6-digit code" maxlength="6"
-                   class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500 text-center text-2xl tracking-widest">
-        </div>
-        
-        <button type="submit" class="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-            Verify Code
-        </button>
-    </form>
+    <!-- Resend OTP Form -->
+    <div class="text-center">
+        <form method="POST" action="{{ route('resend.otp') }}" class="inline">
+            @csrf
+            <button type="submit" class="text-blue-600 hover:underline text-sm">
+                Resend Code
+            </button>
+        </form>
+    </div>
     
-    <p class="mt-4 text-center text-sm text-gray-600">
-        <a href="{{ route('login') }}" class="text-blue-600 hover:underline">← Back to Login</a>
+    <div class="mt-4 text-center">
+        <a href="{{ route('login') }}" class="text-gray-500 hover:text-gray-700 text-sm">
+            ← Back to Login
+        </a>
+    </div>
+    
+    <p class="mt-4 text-center text-xs text-gray-400">
+        Didn't receive the code? Check your spam folder.
     </p>
+    
+    <!-- Countdown Timer for Resend -->
+    <script>
+        // Countdown timer for resend button (optional)
+        let resendBtn = document.querySelector('form.inline button');
+        let countdown = 60;
+        
+        if (resendBtn) {
+            let timer = setInterval(function() {
+                if (countdown <= 0) {
+                    resendBtn.disabled = false;
+                    resendBtn.textContent = 'Resend Code';
+                    clearInterval(timer);
+                } else {
+                    resendBtn.disabled = true;
+                    resendBtn.textContent = `Resend in ${countdown}s`;
+                    countdown--;
+                }
+            }, 1000);
+        }
+    </script>
 </div>
 @endsection

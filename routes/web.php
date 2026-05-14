@@ -8,6 +8,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\OtpController;
+use App\Http\Controllers\RatingController;
 
 // Public routes
 Route::get('/', [ProductController::class, 'index'])->name('home');
@@ -32,7 +33,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
-    Route::get('/account/settings', [AccountController::class, 'settings']);
+    Route::get('/account/settings', [AccountController::class, 'settings'])->name('account.settings');
     Route::put('/account/profile', [AccountController::class, 'updateProfile']);
     Route::put('/account/password', [AccountController::class, 'updatePassword']);
     
@@ -63,4 +64,27 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/customers', [AdminController::class, 'allCustomers'])->name('customers.all');
     Route::get('/customers/{userId}/orders', [AdminController::class, 'customerOrders'])->name('customers.orders');
     Route::get('/sales-report', [AdminController::class, 'salesReport'])->name('sales.report');
+});
+
+// Admin routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    // ... existing routes ...
+    
+    // Delivery management routes
+    Route::put('/orders/{id}/delivery-status', [AdminController::class, 'updateDeliveryStatus'])->name('orders.delivery-status');
+    Route::put('/orders/{id}/estimated-delivery', [AdminController::class, 'updateEstimatedDelivery'])->name('orders.estimated-delivery');
+});
+
+Route::post('/product/{product}/rating', [RatingController::class, 'store'])->name('product.rating')->middleware('auth');
+
+// OTP Verification Routes
+Route::get('/verify-otp', [AuthController::class, 'showVerifyOtpForm'])->name('verify.otp.form');
+Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('verify.otp');
+Route::post('/resend-otp', [AuthController::class, 'resendOtp'])->name('resend.otp');
+
+// Account OTP Verification Routes
+Route::middleware('auth')->group(function () {
+    Route::get('/verify-account-otp', [AccountController::class, 'showVerifyOtpForm'])->name('verify.account.otp.form');
+    Route::post('/verify-account-otp', [AccountController::class, 'verifyOtp'])->name('verify.account.otp');
+    Route::post('/resend-account-otp', [AccountController::class, 'resendOtp'])->name('resend.account.otp');
 });

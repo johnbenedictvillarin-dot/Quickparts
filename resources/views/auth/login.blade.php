@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="max-w-md mx-auto bg-white rounded-lg shadow p-6">
-    <h1 class="text-2xl font-bold mb-6 text-center">Login</h1>
+    <h1 class="text-2xl font-bold mb-6">Login</h1>
     
     @if($errors->any())
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -17,7 +17,7 @@
         
         <div class="mb-4">
             <label class="block text-gray-700 mb-2">Email</label>
-            <input type="email" name="email" value="{{ old('email') }}" required 
+            <input type="text" name="email" value="{{ old('email') }}" required 
                    class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500">
         </div>
         
@@ -40,9 +40,10 @@
             </label>
         </div>
         
-        <!-- reCAPTCHA -->
-        <div class="mb-4 flex justify-center">
+        <!-- Google reCAPTCHA - REQUIRED -->
+        <div class="mb-4">
             <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY', '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI') }}"></div>
+            <p class="text-xs text-red-500 mt-1">* Required: Please verify you're not a robot</p>
         </div>
         
         <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
@@ -50,7 +51,7 @@
         </button>
     </form>
     
-    <p class="mt-4 text-center">
+    <p class="mt-4 text-center text-gray-600">
         Don't have an account? <a href="{{ route('register') }}" class="text-blue-600 hover:underline">Register</a>
     </p>
 </div>
@@ -69,5 +70,15 @@
             icon.textContent = '👁️';
         }
     }
+    
+    // Prevent form submission if reCAPTCHA not checked
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        const recaptchaResponse = document.querySelector('[name="g-recaptcha-response"]')?.value;
+        if (!recaptchaResponse) {
+            e.preventDefault();
+            alert('Please verify that you are not a robot by checking the "I\'m not a robot" box.');
+            return false;
+        }
+    });
 </script>
 @endsection

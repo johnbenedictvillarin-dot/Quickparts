@@ -10,6 +10,16 @@
                 {{ session('success') }}
             </div>
         @endif
+
+        @if($errors->any())
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <!-- Profile Information -->
@@ -24,18 +34,13 @@
                         <label class="block text-gray-700 mb-2">Name</label>
                         <input type="text" name="name" value="{{ old('name', $user->name) }}" required 
                                class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500">
-                        @error('name')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
                     </div>
                     
                     <div class="mb-4">
                         <label class="block text-gray-700 mb-2">Email</label>
                         <input type="email" name="email" value="{{ old('email', $user->email) }}" required 
                                class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500">
-                        @error('email')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
+                        <p class="text-xs text-gray-500 mt-1">Changing email requires OTP verification</p>
                     </div>
                     
                     <div class="mb-4">
@@ -68,9 +73,6 @@
                                 <span id="currentIcon">👁️</span>
                             </button>
                         </div>
-                        @error('current_password')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
                     </div>
                     
                     <div class="mb-4">
@@ -83,9 +85,7 @@
                                 <span id="newIcon">👁️</span>
                             </button>
                         </div>
-                        @error('new_password')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
+                        <p class="text-xs text-gray-500 mt-1">Changing password requires OTP verification</p>
                     </div>
                     
                     <div class="mb-4">

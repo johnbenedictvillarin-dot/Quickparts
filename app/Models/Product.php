@@ -10,15 +10,9 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 
-        'slug', 
-        'description', 
-        'price', 
-        'stock', 
-        'image', 
-        'category_id', 
-        'is_active'
-    ];
+    'name', 'slug', 'description', 'price', 'rating', 'review_count', 'stock', 
+    'image', 'category_id', 'is_active', 'sort_order'
+];
 
     public function category()
     {
@@ -34,13 +28,8 @@ class Product extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
-    
-    // Helper method to get image URL
-    public function getImageUrlAttribute()
-    {
-        if ($this->image) {
-            return asset('storage/' . $this->image);
-        }
-        return asset('images/no-image.png');
-    }
+    public function ratings()
+{
+    return $this->hasMany(Rating::class);
+}
 }

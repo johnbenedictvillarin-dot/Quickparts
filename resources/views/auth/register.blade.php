@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="max-w-md mx-auto bg-white rounded-lg shadow p-6">
-    <h1 class="text-2xl font-bold mb-6 text-center">Register</h1>
+    <h1 class="text-2xl font-bold mb-6">Register</h1>
     
     @if($errors->any())
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -51,17 +51,18 @@
             </div>
         </div>
         
-        <!-- reCAPTCHA -->
-        <div class="mb-4 flex justify-center">
+        <!-- Google reCAPTCHA - REQUIRED -->
+        <div class="mb-4">
             <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY', '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI') }}"></div>
+            <p class="text-xs text-red-500 mt-1">* Required: Please verify you're not a robot</p>
         </div>
         
-        <button type="submit" class="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+        <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
             Register
         </button>
     </form>
     
-    <p class="mt-4 text-center">
+    <p class="mt-4 text-center text-gray-600">
         Already have an account? <a href="{{ url('/login') }}" class="text-blue-600 hover:underline">Login</a>
     </p>
 </div>
@@ -80,5 +81,15 @@
             icon.textContent = '👁️';
         }
     }
+    
+    // Prevent form submission if reCAPTCHA not checked
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+        const recaptchaResponse = document.querySelector('[name="g-recaptcha-response"]')?.value;
+        if (!recaptchaResponse) {
+            e.preventDefault();
+            alert('Please verify that you are not a robot by checking the "I\'m not a robot" box.');
+            return false;
+        }
+    });
 </script>
 @endsection
