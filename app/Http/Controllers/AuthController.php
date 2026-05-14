@@ -7,6 +7,7 @@ use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class AuthController extends Controller
 {
@@ -22,9 +23,25 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        // Verify reCAPTCHA if enabled
-        if ($this->validateRecaptcha($request)) {
-            return back()->withErrors(['g-recaptcha-response' => 'Please complete the reCAPTCHA verification.']);
+        // Verify reCAPTCHA
+        $recaptchaResponse = $request->input('g-recaptcha-response');
+        
+        if (empty($recaptchaResponse)) {
+            return back()->withErrors(['g-recaptcha-response' => 'Please verify that you are not a robot.'])->onlyInput('email');
+        }
+
+        $recaptchaSecret = env('RECAPTCHA_SECRET_KEY', '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe');
+        
+        $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+            'secret' => $recaptchaSecret,
+            'response' => $recaptchaResponse,
+            'remoteip' => $request->ip()
+        ]);
+        
+        $result = $response->json();
+        
+        if (!$result['success']) {
+            return back()->withErrors(['g-recaptcha-response' => 'reCAPTCHA verification failed. Please try again.'])->onlyInput('email');
         }
 
         $credentials = $request->only('email', 'password');
@@ -41,7 +58,7 @@ class AuthController extends Controller
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
-        ]);
+        ])->onlyInput('email');
     }
 
     public function showRegister()
@@ -57,9 +74,25 @@ class AuthController extends Controller
             'password' => 'required|min:6|confirmed',
         ]);
 
-        // Verify reCAPTCHA if enabled
-        if ($this->validateRecaptcha($request)) {
-            return back()->withErrors(['g-recaptcha-response' => 'Please complete the reCAPTCHA verification.']);
+        // Verify reCAPTCHA
+        $recaptchaResponse = $request->input('g-recaptcha-response');
+        
+        if (empty($recaptchaResponse)) {
+            return back()->withErrors(['g-recaptcha-response' => 'Please verify that you are not a robot.'])->withInput();
+        }
+
+        $recaptchaSecret = env('RECAPTCHA_SECRET_KEY', '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe');
+        
+        $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+            'secret' => $recaptchaSecret,
+            'response' => $recaptchaResponse,
+            'remoteip' => $request->ip()
+        ]);
+        
+        $result = $response->json();
+        
+        if (!$result['success']) {
+            return back()->withErrors(['g-recaptcha-response' => 'reCAPTCHA verification failed. Please try again.'])->withInput();
         }
 
         $user = User::create([
@@ -72,7 +105,7 @@ class AuthController extends Controller
         Cart::create(['user_id' => $user->id]);
         Auth::login($user);
 
-        return redirect('/');
+        return redirect('/')->with('success', 'Registration successful!');
     }
 
     public function logout(Request $request)
@@ -82,22 +115,5 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
         
         return redirect('/');
-    }
-
-    private function validateRecaptcha($request)
-    {
-        $recaptchaResponse = $request->input('g-recaptcha-response');
-        
-        // Skip validation if no response (for testing)
-        if (empty($recaptchaResponse)) {
-            return false;
-        }
-
-        $recaptchaSecret = env('RECAPTCHA_SECRET_KEY', '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe');
-        
-        $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$recaptchaSecret}&response={$recaptchaResponse}");
-        $responseData = json_decode($response);
-        
-        return !$responseData->success;
     }
 }

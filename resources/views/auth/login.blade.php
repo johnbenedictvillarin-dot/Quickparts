@@ -2,24 +2,23 @@
 
 @section('content')
 <div class="max-w-md mx-auto bg-white rounded-lg shadow p-6">
-    <h1 class="text-2xl font-bold mb-6">Login</h1>
+    <h1 class="text-2xl font-bold mb-6 text-center">Login</h1>
     
-    @if(session('error'))
+    @if($errors->any())
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {{ session('error') }}
+            @foreach($errors->all() as $error)
+                <p>{{ $error }}</p>
+            @endforeach
         </div>
     @endif
     
-    <form method="POST" action="{{ url('/login') }}">
+    <form method="POST" action="{{ url('/login') }}" id="loginForm">
         @csrf
         
         <div class="mb-4">
             <label class="block text-gray-700 mb-2">Email</label>
             <input type="email" name="email" value="{{ old('email') }}" required 
                    class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500">
-            @error('email')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
         </div>
         
         <div class="mb-4">
@@ -32,9 +31,6 @@
                     <span id="passwordIcon">👁️</span>
                 </button>
             </div>
-            @error('password')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
         </div>
         
         <div class="mb-4">
@@ -44,12 +40,9 @@
             </label>
         </div>
         
-        <!-- Google reCAPTCHA -->
-        <div class="mb-4">
+        <!-- reCAPTCHA -->
+        <div class="mb-4 flex justify-center">
             <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY', '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI') }}"></div>
-            @error('g-recaptcha-response')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
         </div>
         
         <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
@@ -57,8 +50,8 @@
         </button>
     </form>
     
-    <p class="mt-4 text-center text-gray-600">
-        Don't have an account? <a href="{{ route('register') }}" class="text-blue-600 hover:underline">Register with Email</a>
+    <p class="mt-4 text-center">
+        Don't have an account? <a href="{{ route('register') }}" class="text-blue-600 hover:underline">Register</a>
     </p>
 </div>
 

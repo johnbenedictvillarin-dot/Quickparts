@@ -32,12 +32,12 @@
                 @foreach($products as $product)
                     <tr class="border-b">
                         <td class="py-2">
-                            @if($product->image)
-                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-12 h-12 object-cover rounded">
-                            @else
-                                <div class="w-12 h-12 bg-gray-200 rounded flex items-center justify-center text-gray-400">No img</div>
-                            @endif
-                        </td>
+    @if($product->image && file_exists(public_path('storage/' . $product->image)))
+        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-12 h-12 object-cover rounded">
+    @else
+        <div class="w-12 h-12 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs">No img</div>
+    @endif
+</td>
                         <td class="py-2">{{ $product->name }}</td>
                         <td class="py-2">{{ $product->category->name }}</td>
                         <td class="py-2">₱{{ number_format($product->price, 2) }}</td>

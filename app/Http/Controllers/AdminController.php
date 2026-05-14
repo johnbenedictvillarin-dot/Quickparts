@@ -71,21 +71,18 @@ class AdminController extends Controller
             $imagePath = $image->storeAs('products', $imageName, 'public');
         }
 
-        Product::updateOrCreate(
-            ['slug' => $slug],
-            [
-                'name' => $request->name,
-                'slug' => $slug,
-                'description' => $request->description,
-                'price' => $request->price,
-                'stock' => $request->stock,
-                'category_id' => $request->category_id,
-                'image' => $imagePath,
-                'is_active' => $request->has('is_active'),
-            ]
-        );
+        Product::create([
+            'name' => $request->name,
+            'slug' => $slug,
+            'description' => $request->description,
+            'price' => $request->price,
+            'stock' => $request->stock,
+            'category_id' => $request->category_id,
+            'image' => $imagePath,
+            'is_active' => $request->has('is_active'),
+        ]);
 
-        return redirect()->route('admin.products')->with('success', 'Product saved successfully!');
+        return redirect()->route('admin.products')->with('success', 'Product created successfully!');
     }
 
     public function editProduct($id)

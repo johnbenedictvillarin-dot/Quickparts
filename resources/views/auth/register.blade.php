@@ -2,29 +2,29 @@
 
 @section('content')
 <div class="max-w-md mx-auto bg-white rounded-lg shadow p-6">
-    <h1 class="text-2xl font-bold mb-6">Complete Registration</h1>
+    <h1 class="text-2xl font-bold mb-6 text-center">Register</h1>
     
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-        ✓ Email verified! Please complete your registration.
-    </div>
+    @if($errors->any())
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            @foreach($errors->all() as $error)
+                <p>{{ $error }}</p>
+            @endforeach
+        </div>
+    @endif
     
-    <form method="POST" action="{{ route('register.complete.submit') }}">
+    <form method="POST" action="{{ url('/register') }}" id="registerForm">
         @csrf
         
         <div class="mb-4">
-            <label class="block text-gray-700 mb-2">Email</label>
-            <input type="email" value="{{ $email }}" disabled 
-                   class="w-full bg-gray-100 border rounded px-3 py-2">
-            <input type="hidden" name="email" value="{{ $email }}">
+            <label class="block text-gray-700 mb-2">Name</label>
+            <input type="text" name="name" required value="{{ old('name') }}"
+                   class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500">
         </div>
         
         <div class="mb-4">
-            <label class="block text-gray-700 mb-2">Full Name</label>
-            <input type="text" name="name" required autofocus
+            <label class="block text-gray-700 mb-2">Email</label>
+            <input type="email" name="email" required value="{{ old('email') }}"
                    class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500">
-            @error('name')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
         </div>
         
         <div class="mb-4">
@@ -37,9 +37,6 @@
                     <span id="passwordIcon">👁️</span>
                 </button>
             </div>
-            @error('password')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
         </div>
         
         <div class="mb-4">
@@ -54,12 +51,22 @@
             </div>
         </div>
         
-        <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-            Complete Registration
+        <!-- reCAPTCHA -->
+        <div class="mb-4 flex justify-center">
+            <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY', '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI') }}"></div>
+        </div>
+        
+        <button type="submit" class="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+            Register
         </button>
     </form>
+    
+    <p class="mt-4 text-center">
+        Already have an account? <a href="{{ url('/login') }}" class="text-blue-600 hover:underline">Login</a>
+    </p>
 </div>
 
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script>
     function togglePassword(inputId, iconId) {
         const passwordInput = document.getElementById(inputId);
