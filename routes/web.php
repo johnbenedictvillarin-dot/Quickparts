@@ -88,3 +88,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/verify-account-otp', [AccountController::class, 'verifyOtp'])->name('verify.account.otp');
     Route::post('/resend-account-otp', [AccountController::class, 'resendOtp'])->name('resend.account.otp');
 });
+
+Route::get('/health', function () {
+    return response()->json(['status' => 'ok']);
+});

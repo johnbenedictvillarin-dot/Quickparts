@@ -1,3 +1,4 @@
 <?php
 http_response_code(200);
-echo "OK";
+header('Content-Type: application/json');
+echo json_encode(['status' => 'ok', 'time' => date('Y-m-d H:i:s')]);
