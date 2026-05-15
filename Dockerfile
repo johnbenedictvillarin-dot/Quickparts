@@ -1,8 +1,7 @@
-FROM php:8.2-cli
+FROM php:8.2-fpm
 
-RUN apt-get update && apt-get install -y \
-    git unzip zip libzip-dev libpng-dev libonig-dev \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+RUN apt-get update && apt-get install -y nginx libpng-dev libzip-dev libonig-dev libxml2-dev && rm -rf /var/lib/apt/lists/*
+RUN docker-php-ext-install pdo_mysql mbstring gd zip xml
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -10,10 +9,11 @@ WORKDIR /app
 COPY . .
 
 RUN cp .env.example .env && composer install --no-dev --optimize-autoloader --ignore-platform-reqs
+RUN chmod -R 777 storage bootstrap/cache
 
-RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views bootstrap/cache
-RUN chmod -R 775 storage bootstrap/cache
+COPY docker/start.sh /start.sh
+RUN chmod +x /start.sh
 
-EXPOSE ${PORT:-8080}
+EXPOSE 8080
 
-CMD ["sh", "-c", "php artisan migrate --force 2>/dev/null || true && php artisan serve --host=0.0.0.0 --port=${PORT:-8080}"]
+CMD ["/start.sh"]
