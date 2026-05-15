@@ -1,6 +1,10 @@
-storage/logs/*
+.env
+.env.*
+storage/*.key
 storage/framework/cache/*
 storage/framework/sessions/*
 storage/framework/views/*
-bootstrap/cache/*
-.env
+storage/logs/*
+tests/
+.git/
+.github/
