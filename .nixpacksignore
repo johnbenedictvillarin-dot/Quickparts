@@ -1,4 +1,5 @@
 node_modules/
+vendor/
 package.json
 package-lock.json
 vite.config.js
@@ -12,3 +13,7 @@ storage/framework/sessions/*
 storage/framework/views/*
 storage/logs/*.log
 tests/
+docker/
+products_backup.sql
+backup_for_usb.bat
+storage/app/public/products/
