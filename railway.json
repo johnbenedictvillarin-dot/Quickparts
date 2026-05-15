@@ -1,9 +1,7 @@
 {
   "build": {
-    "builder": "nixpacks",
-    "buildCommand": "mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views bootstrap/cache && chmod -R 775 storage bootstrap/cache && composer install --ignore-platform-reqs --no-dev --optimize-autoloader"
-  },
-  "start": {
-    "web": "php artisan serve --host=0.0.0.0 --port=$PORT"
+    "builder": "DOCKERFILE",
+    "buildCommand": null,
+    "watchPatterns": ["Dockerfile", "docker/**", "composer.json", "composer.lock"]
   }
 }
