@@ -17,10 +17,7 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-RUN { \
-        echo '[www]'; \
-        echo 'listen = 127.0.0.1:9000'; \
-    } > /usr/local/etc/php-fpm.d/zz-docker.conf
+RUN echo '[www]' > /usr/local/etc/php-fpm.d/zz-docker.conf && echo 'listen = 127.0.0.1:9000' >> /usr/local/etc/php-fpm.d/zz-docker.conf
 
 WORKDIR /app
 
