@@ -1,8 +1,0 @@
-{
-  "build": {
-    "builder": "nixpacks"
-  },
-  "healthcheck": {
-    "path": "/healthcheck.php"
-  }
-}
