@@ -1,13 +1,9 @@
 {
   "build": {
-    "builder": "nixpacks",
-    "buildCommand": "cp .env.example .env && composer install --no-dev --optimize-autoloader --ignore-platform-reqs"
+    "builder": "DOCKERFILE"
   },
   "deploy": {
     "healthcheckPath": "/healthcheck.php",
     "healthcheckTimeout": 100
-  },
-  "start": {
-    "web": "php artisan serve --host=0.0.0.0 --port=$PORT"
   }
 }

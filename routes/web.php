@@ -92,3 +92,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/health', function () {
     return response()->json(['status' => 'ok']);
 });
+
+Route::get('/ping', function () {
+    return 'pong';
+});
