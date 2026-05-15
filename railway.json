@@ -1,0 +1,9 @@
+{
+  "build": {
+    "builder": "DOCKERFILE"
+  },
+  "deploy": {
+    "healthcheckPath": "/healthcheck.php",
+    "healthcheckTimeout": 100
+  }
+}
