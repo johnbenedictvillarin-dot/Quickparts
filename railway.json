@@ -1,7 +1,8 @@
 {
   "build": {
-    "builder": "DOCKERFILE",
-    "buildCommand": null,
-    "watchPatterns": ["Dockerfile", "docker/**", "composer.json", "composer.lock"]
+    "builder": "nixpacks"
+  },
+  "healthcheck": {
+    "path": "/healthcheck.php"
   }
 }
