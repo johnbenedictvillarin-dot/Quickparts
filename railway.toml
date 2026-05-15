@@ -1,0 +1,4 @@
+[deploy]
+startCommand = "php artisan migrate --force && nginx -c /app/nginx.conf -g 'daemon off;' & php-fpm -F"
+healthcheckPath = "/"
+healthcheckTimeout = 60
