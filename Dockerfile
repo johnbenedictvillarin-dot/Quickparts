@@ -1,37 +1,26 @@
-FROM php:8.2-fpm
+FROM php:8.2-apache
 
-RUN apt-get update && apt-get install -y \
-    nginx \
-    curl \
-    libpng-dev \
-    libxml2-dev \
-    libonig-dev \
-    zip \
-    unzip \
-    nodejs \
-    npm \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+RUN docker-php-ext-install pdo_mysql
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-RUN echo '[global]' > /usr/local/etc/php-fpm.d/zz-docker.conf && echo 'error_log = /proc/self/fd/2' >> /usr/local/etc/php-fpm.d/zz-docker.conf && echo '' >> /usr/local/etc/php-fpm.d/zz-docker.conf && echo '[www]' >> /usr/local/etc/php-fpm.d/zz-docker.conf && echo 'access.log = /proc/self/fd/2' >> /usr/local/etc/php-fpm.d/zz-docker.conf && echo 'listen = 127.0.0.1:9000' >> /usr/local/etc/php-fpm.d/zz-docker.conf
-
 WORKDIR /app
-
 COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 
-RUN npm install && npm run build
+RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
+RUN chmod -R 775 /app/storage /app/bootstrap/cache
 
-RUN chmod -R 777 storage bootstrap/cache
+# Apache listens on port 80, but Railway uses $PORT
+# Create a start script that uses Railway's $PORT
+RUN echo '#!/bin/bash\n\
+sed -i "s/80/${PORT:-80}/g" /etc/apache2/ports.conf\n\
+sed -i "s/80/${PORT:-80}/g" /etc/apache2/sites-available/000-default.conf\n\
+apache2-foreground' > /start.sh
 
-COPY docker/start.sh /start.sh
 RUN chmod +x /start.sh
 
-EXPOSE 8080
+EXPOSE ${PORT:-80}
 
 ENTRYPOINT ["/start.sh"]

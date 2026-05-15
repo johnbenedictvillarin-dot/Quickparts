@@ -1,9 +1,9 @@
 {
   "build": {
-    "builder": "DOCKERFILE"
+    "builder": "nixpacks",
+    "buildCommand": "composer install --no-dev --optimize-autoloader"
   },
-  "deploy": {
-    "healthcheckPath": "/healthcheck.php",
-    "restartPolicyType": "ON_FAILURE"
+  "start": {
+    "web": ""
   }
 }
