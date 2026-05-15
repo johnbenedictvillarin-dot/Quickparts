@@ -28,5 +28,16 @@ EOF
 echo "Starting PHP-FPM..."
 php-fpm -D
 
+# Wait for PHP-FPM to be ready before starting Nginx
+echo "Waiting for PHP-FPM to be ready..."
+for i in $(seq 1 15); do
+    if bash -c 'echo > /dev/tcp/127.0.0.1/9000' 2>/dev/null; then
+        echo "PHP-FPM is ready."
+        break
+    fi
+    echo "Waiting... ($i/15)"
+    sleep 1
+done
+
 echo "Starting Nginx..."
 nginx -g "daemon off;"
