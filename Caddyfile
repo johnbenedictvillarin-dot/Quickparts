@@ -2,7 +2,7 @@
     auto_https off
 }
 
-localhost:8080 {
+:{$PORT} {
     root * /app/public
     php_server
 }
