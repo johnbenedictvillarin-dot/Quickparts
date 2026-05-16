@@ -1,0 +1,20 @@
+{
+  "projects": {
+    "C:\\xampp\\htdocs\\motorcycle-parts-system": {
+      "projectPath": "C:\\xampp\\htdocs\\motorcycle-parts-system",
+      "name": "rare-elegance",
+      "project": "e6a420dd-7d8f-4135-b7ba-d5a9954670f0",
+      "environment": "01310f5a-b9c5-499f-a736-5dfe1b01b1d4",
+      "environmentName": "production",
+      "service": "42b84abe-8814-4677-9f75-0777f533d819"
+    }
+  },
+  "user": {
+    "id": "2ef8ef04-95dd-4698-9400-c9c503e0c295",
+    "token": null,
+    "accessToken": "isA0rViOLtleUObLvDzrPnETLHpbkz-NDsBTWJUirQi",
+    "refreshToken": "Si4kDhlRrtsjcvxen90DLAaUKd4Bu8GfOboWf7HISxr",
+    "tokenExpiresAt": 1778898642
+  },
+  "linkedFunctions": null
+}
