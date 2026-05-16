@@ -3,8 +3,5 @@
     "build": {
         "builder": "RAILPACK",
         "buildCommand": "composer install --no-dev --optimize-autoloader --ignore-platform-reqs"
-    },
-    "deploy": {
-        "startCommand": "php -S 0.0.0.0:$PORT -t public"
     }
 }
