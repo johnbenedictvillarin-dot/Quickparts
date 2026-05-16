@@ -1,7 +1,21 @@
 <?php
-// Simple responder for Railway
-http_response_code(200);
-header('Content-Type: text/html');
-echo "<h1>QuickParts Server is Running</h1>";
-echo "<p>Time: " . date('Y-m-d H:i:s') . "</p>";
-echo "<p>Port: " . (getenv('PORT') ?: '8080') . "</p>";
+
+use Illuminate\Http\Request;
+
+define('LARAVEL_START', microtime(true));
+
+if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
+    require $maintenance;
+}
+
+require __DIR__.'/../vendor/autoload.php';
+
+$app = require_once __DIR__.'/../bootstrap/app.php';
+
+$kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
+
+$response = $kernel->handle(
+    $request = Request::capture()
+)->send();
+
+$kernel->terminate($request, $response);
