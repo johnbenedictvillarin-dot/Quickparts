@@ -1,10 +1,6 @@
 {
     "$schema": "https://railway.com/railway.schema.json",
     "build": {
-        "builder": "RAILPACK",
-        "buildCommand": "composer install --no-dev --optimize-autoloader --ignore-platform-reqs"
-    },
-    "deploy": {
-        "startCommand": null
+        "builder": "DOCKERFILE"
     }
 }
