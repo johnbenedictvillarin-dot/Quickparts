@@ -41,10 +41,10 @@ return [
 
         'database' => [
             'driver' => 'database',
-            'connection' => env('DB_CACHE_CONNECTION'),
+            'connection' => env('DB_CACHE_CONNECTION', null),
             'table' => env('DB_CACHE_TABLE', 'cache'),
-            'lock_connection' => env('DB_CACHE_LOCK_CONNECTION'),
-            'lock_table' => env('DB_CACHE_LOCK_TABLE'),
+            'lock_connection' => env('DB_CACHE_LOCK_CONNECTION', null),
+            'lock_table' => env('DB_CACHE_LOCK_TABLE', null),
         ],
 
         'file' => [
@@ -55,10 +55,10 @@ return [
 
         'memcached' => [
             'driver' => 'memcached',
-            'persistent_id' => env('MEMCACHED_PERSISTENT_ID'),
+            'persistent_id' => env('MEMCACHED_PERSISTENT_ID', null),
             'sasl' => [
-                env('MEMCACHED_USERNAME'),
-                env('MEMCACHED_PASSWORD'),
+                env('MEMCACHED_USERNAME', null),
+                env('MEMCACHED_PASSWORD', null),
             ],
             'options' => [
                 // Memcached::OPT_CONNECT_TIMEOUT => 2000,
@@ -84,7 +84,7 @@ return [
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
             'table' => env('DYNAMODB_CACHE_TABLE', 'cache'),
-            'endpoint' => env('DYNAMODB_ENDPOINT'),
+            'endpoint' => env('DYNAMODB_ENDPOINT', null),
         ],
 
         'octane' => [
