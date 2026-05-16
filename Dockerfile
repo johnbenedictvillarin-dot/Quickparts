@@ -1,12 +1,6 @@
-FROM dunglas/frankenphp:1-php8.2-alpine AS base
-
-RUN install-php-extensions pdo_mysql
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+FROM python:3.11-alpine
 
 WORKDIR /app
-COPY . .
-RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
+RUN echo "OK from Python" > index.html
 
-ENV APP_ENV=production
-
-CMD ["frankenphp", "run", "--config", "/app/Caddyfile"]
+CMD python3 -m http.server $PORT
