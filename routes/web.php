@@ -17,8 +17,21 @@ Route::get('/products/{slug}', [ProductController::class, 'show'])->name('produc
 
 // Guest routes
 Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/login', function() {
+        session(['test_token' => csrf_token()]);
+        return view('auth.login');
+    })->name('login');
+    Route::post('/login', function(\Illuminate\Http\Request $request) {
+        $sessionToken = session('test_token');
+        $requestToken = $request->input('_token');
+        $currentToken = csrf_token();
+        return response()->json([
+            'session_token' => $sessionToken,
+            'request_token' => $requestToken,
+            'current_token' => $currentToken,
+            'session_id' => session()->getId(),
+        ]);
+    });
     
     // OTP Registration Routes
     Route::get('/register', [OtpController::class, 'showVerifyForm'])->name('register');
