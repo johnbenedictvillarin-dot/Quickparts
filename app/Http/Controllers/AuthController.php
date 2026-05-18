@@ -51,7 +51,7 @@ class AuthController extends Controller
         // Store user ID in session temporarily
         session(['temp_user_id' => $user->id, 'login_email' => $user->email]);
 
-        return redirect()->route('verify.otp.form')->with('email', $user->email);
+        return redirect()->route('verify.login.otp.form')->with('email', $user->email);
     }
 
     public function showVerifyOtpForm()

@@ -21,8 +21,9 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     
     // OTP Registration Routes
-    Route::get('/register', [OtpController::class, 'showVerifyForm'])->name('register');
+    Route::get('/register', [OtpController::class, 'showInitialForm'])->name('register');
     Route::post('/send-otp', [OtpController::class, 'sendOtp'])->name('send.otp');
+    Route::get('/verify-otp-form', [OtpController::class, 'showVerifyForm'])->name('verify.form');
     Route::post('/verify-otp', [OtpController::class, 'verifyOtp'])->name('verify.otp');
     Route::get('/complete-registration', [OtpController::class, 'showRegistrationForm'])->name('register.complete');
     Route::post('/complete-registration', [OtpController::class, 'completeRegistration'])->name('register.complete.submit');
@@ -77,10 +78,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
 Route::post('/product/{product}/rating', [RatingController::class, 'store'])->name('product.rating')->middleware('auth');
 
-// OTP Verification Routes
-Route::get('/verify-otp', [AuthController::class, 'showVerifyOtpForm'])->name('verify.otp.form');
-Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('verify.otp');
-Route::post('/resend-otp', [AuthController::class, 'resendOtp'])->name('resend.otp');
+// OTP Verification Routes (for login)
+Route::get('/verify-login-otp', [AuthController::class, 'showVerifyOtpForm'])->name('verify.login.otp.form');
+Route::post('/verify-login-otp', [AuthController::class, 'verifyOtp'])->name('verify.login.otp');
+Route::post('/resend-login-otp', [AuthController::class, 'resendOtp'])->name('resend.login.otp');
 
 // Account OTP Verification Routes
 Route::middleware('auth')->group(function () {

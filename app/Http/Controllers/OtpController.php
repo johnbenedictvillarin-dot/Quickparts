@@ -12,9 +12,17 @@ use Illuminate\Support\Facades\Mail;
 
 class OtpController extends Controller
 {
+    public function showInitialForm()
+    {
+        return view('auth.register-initial');
+    }
+
     public function showVerifyForm()
     {
-        return view('auth.verify-otp');
+        if (!session('otp_email')) {
+            return redirect()->route('register');
+        }
+        return view('auth.verify-otp', ['email' => session('otp_email')]);
     }
 
     public function sendOtp(Request $request)
@@ -24,6 +32,9 @@ class OtpController extends Controller
         ]);
 
         $email = $request->email;
+        
+        // Store email in session for verification step
+        session(['otp_email' => $email]);
         
         // Generate OTP
         $otp = rand(100000, 999999);
@@ -39,15 +50,15 @@ class OtpController extends Controller
             'expires_at' => now()->addMinutes(10)
         ]);
         
-        // Send email with corrected format
+        // Send email
         try {
             $this->sendOtpEmail($email, $otp);
-            return redirect()->back()
+            return redirect()->route('register')
                 ->with('success', 'Verification code sent to ' . $email)
                 ->with('email', $email);
         } catch (\Exception $e) {
             // If email fails, still show OTP for testing
-            return redirect()->back()
+            return redirect()->route('register')
                 ->with('success', '✅ Your verification code is: <strong style="font-size:28px;">' . $otp . '</strong>')
                 ->with('email', $email);
         }
@@ -68,12 +79,15 @@ class OtpController extends Controller
 
     public function verifyOtp(Request $request)
     {
+        $email = session('otp_email');
+        if (!$email) {
+            return redirect()->route('register')->with('error', 'Please enter your email first.');
+        }
+        
         $request->validate([
-            'email' => 'required|email',
             'otp' => 'required|numeric|digits:6'
         ]);
         
-        $email = $request->email;
         $otpCode = $request->otp;
         
         $otpRecord = Otp::where('email', $email)
@@ -132,11 +146,11 @@ class OtpController extends Controller
 
     public function resendOtp(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email'
-        ]);
+        $email = session('otp_email');
+        if (!$email) {
+            return redirect()->route('register')->with('error', 'Please enter your email first.');
+        }
         
-        $email = $request->email;
         $otp = rand(100000, 999999);
         
         Otp::where('email', $email)->delete();

@@ -7,7 +7,7 @@
     <div class="text-center mb-4">
         <div class="text-5xl mb-3">🔐</div>
         <p class="text-gray-600">We've sent a verification code to:</p>
-        <p class="font-bold text-gray-800">{{ session('email') }}</p>
+        <p class="font-bold text-gray-800">{{ $email ?? session('email') ?? session('otp_email') }}</p>
     </div>
     
     @if(session('success'))
@@ -54,7 +54,7 @@
     
     <!-- Resend OTP Form -->
     <div class="text-center">
-        <form method="POST" action="{{ route('resend.otp') }}" class="inline">
+        <form method="POST" action="{{ route('resend.login.otp') }}" class="inline">
             @csrf
             <button type="submit" class="text-blue-600 hover:underline text-sm">
                 Resend Code
