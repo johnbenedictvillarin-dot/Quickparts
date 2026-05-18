@@ -53,12 +53,12 @@ class OtpController extends Controller
         // Send email
         try {
             $this->sendOtpEmail($email, $otp);
-            return redirect()->route('register')
+            return redirect()->route('verify.form')
                 ->with('success', 'Verification code sent to ' . $email)
                 ->with('email', $email);
         } catch (\Exception $e) {
             // If email fails, still show OTP for testing
-            return redirect()->route('register')
+            return redirect()->route('verify.form')
                 ->with('success', '✅ Your verification code is: <strong style="font-size:28px;">' . $otp . '</strong>')
                 ->with('email', $email);
         }
