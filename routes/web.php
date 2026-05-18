@@ -19,16 +19,16 @@ Route::get('/products/{slug}', [ProductController::class, 'show'])->name('produc
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
-    
-    // OTP Registration Routes
-    Route::get('/register', [OtpController::class, 'showInitialForm'])->name('register');
-    Route::post('/send-otp', [OtpController::class, 'sendOtp'])->name('send.otp');
-    Route::get('/verify-otp-form', [OtpController::class, 'showVerifyForm'])->name('verify.form');
-    Route::post('/verify-otp', [OtpController::class, 'verifyOtp'])->name('verify.otp');
-    Route::get('/complete-registration', [OtpController::class, 'showRegistrationForm'])->name('register.complete');
-    Route::post('/complete-registration', [OtpController::class, 'completeRegistration'])->name('register.complete.submit');
-    Route::post('/resend-otp', [OtpController::class, 'resendOtp'])->name('resend.otp');
 });
+
+// Registration routes (outside guest middleware to avoid redirect loops)
+Route::get('/register', [OtpController::class, 'showInitialForm'])->name('register');
+Route::post('/send-otp', [OtpController::class, 'sendOtp'])->name('send.otp');
+Route::get('/verify-otp-form', [OtpController::class, 'showVerifyForm'])->name('verify.form');
+Route::post('/verify-otp', [OtpController::class, 'verifyOtp'])->name('verify.otp');
+Route::get('/complete-registration', [OtpController::class, 'showRegistrationForm'])->name('register.complete');
+Route::post('/complete-registration', [OtpController::class, 'completeRegistration'])->name('register.complete.submit');
+Route::post('/resend-otp', [OtpController::class, 'resendOtp'])->name('resend.otp');
 
 // Auth routes
 Route::middleware('auth')->group(function () {
