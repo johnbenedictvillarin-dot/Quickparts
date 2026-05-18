@@ -97,3 +97,24 @@ Route::get('/health', function () {
 Route::get('/ping', function () {
     return 'pong';
 });
+
+Route::get('/test-mail', function () {
+    try {
+        $config = config('mail.mailers.smtp');
+        Mail::raw('Test email from QuickParts', function ($message) {
+            $message->to('johnbenedictvillarin@gmail.com')
+                    ->subject('QuickParts Test Email')
+                    ->from('johnbenedictvillarin@gmail.com', 'QuickParts');
+        });
+        return response()->json([
+            'status' => 'success',
+            'config' => $config,
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'failed',
+            'error' => $e->getMessage(),
+            'config' => config('mail.mailers.smtp'),
+        ]);
+    }
+});
