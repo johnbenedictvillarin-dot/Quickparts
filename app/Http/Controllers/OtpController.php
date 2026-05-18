@@ -62,7 +62,7 @@ class OtpController extends Controller
             return redirect()->route('verify.form')
                 ->with('success', '✅ Your verification code is: <strong style="font-size:28px;">' . $otp . '</strong>')
                 ->with('email', $email)
-                ->with('mail_error', 'Email failed: ' . $error);
+                ->with('warning', '⚠️ Email delivery failed - use the code shown. Error: ' . $error);
         }
         
         return redirect()->route('verify.form')
