@@ -9,7 +9,9 @@ return new class extends Migration
     public function up()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->date('estimated_delivery_date')->nullable();
+            if (!Schema::hasColumn('orders', 'estimated_delivery_date')) {
+                $table->date('estimated_delivery_date')->nullable();
+            }
         });
     }
 
