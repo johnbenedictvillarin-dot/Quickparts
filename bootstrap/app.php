@@ -4,7 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
-// FIX TEMP DIRECTORY ISSUE - Cross-platform compatible
+// Create temp directories for views and cache
 $tempDir = PHP_OS_FAMILY === 'Windows'
     ? sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'laravel'
     : '/tmp/laravel';
@@ -13,31 +13,14 @@ if (!is_dir($tempDir)) {
     mkdir($tempDir, 0777, true);
 }
 
-putenv('TMPDIR=' . $tempDir);
-ini_set('upload_tmp_dir', $tempDir);
-
-// Only set session.save_path for file-based sessions
-if (env('SESSION_DRIVER', 'file') === 'file') {
-    $sessionPath = $tempDir . DIRECTORY_SEPARATOR . 'sessions';
-    if (!is_dir($sessionPath)) {
-        mkdir($sessionPath, 0777, true);
-    }
-    ini_set('session.save_path', $sessionPath);
-}
-
-ini_set('sys_temp_dir', $tempDir);
-
-$basePath = dirname(__DIR__);
-
-// Create necessary directories
 $dirs = [
     $tempDir . DIRECTORY_SEPARATOR . 'views',
     $tempDir . DIRECTORY_SEPARATOR . 'cache',
-    $basePath . '/storage/logs',
-    $basePath . '/storage/framework/cache',
-    $basePath . '/storage/framework/sessions',
-    $basePath . '/storage/framework/views',
-    $basePath . '/bootstrap/cache',
+    dirname(__DIR__) . '/storage/logs',
+    dirname(__DIR__) . '/storage/framework/cache',
+    dirname(__DIR__) . '/storage/framework/sessions',
+    dirname(__DIR__) . '/storage/framework/views',
+    dirname(__DIR__) . '/bootstrap/cache',
 ];
 
 foreach ($dirs as $dir) {
@@ -45,6 +28,10 @@ foreach ($dirs as $dir) {
         mkdir($dir, 0777, true);
     }
 }
+
+putenv('TMPDIR=' . $tempDir);
+ini_set('upload_tmp_dir', $tempDir);
+ini_set('sys_temp_dir', $tempDir);
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
