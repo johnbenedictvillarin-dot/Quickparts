@@ -51,29 +51,33 @@ class OtpController extends Controller
         ]);
         
         // Send email
+        $error = null;
         try {
             $this->sendOtpEmail($email, $otp);
-            return redirect()->route('verify.form')
-                ->with('success', 'Verification code sent to ' . $email)
-                ->with('email', $email);
         } catch (\Exception $e) {
-            // If email fails, still show OTP for testing
+            $error = $e->getMessage();
+        }
+        
+        if ($error) {
             return redirect()->route('verify.form')
                 ->with('success', '✅ Your verification code is: <strong style="font-size:28px;">' . $otp . '</strong>')
-                ->with('email', $email);
+                ->with('email', $email)
+                ->with('mail_error', 'Email failed: ' . $error);
         }
+        
+        return redirect()->route('verify.form')
+            ->with('success', 'Verification code sent to ' . $email)
+            ->with('email', $email);
     }
 
     private function sendOtpEmail($email, $otp)
     {
-        // Plain text email body (works 100%)
         $plainText = "Your QuickParts verification code is: " . $otp . "\n\nThis code is valid for 10 minutes.\n\nThank you for using QuickParts!";
         
-        // Send using correct Laravel Mail syntax
         Mail::raw($plainText, function ($message) use ($email) {
             $message->to($email)
                     ->subject('QuickParts - Your Verification Code')
-                    ->from(env('MAIL_FROM_ADDRESS', 'noreply@quickparts.com'), 'QuickParts System');
+                    ->from('johnbenedictvillarin@gmail.com', 'QuickParts');
         });
     }
 
@@ -162,11 +166,17 @@ class OtpController extends Controller
             'expires_at' => now()->addMinutes(10)
         ]);
         
+        $error = null;
         try {
             $this->sendOtpEmail($email, $otp);
-            return back()->with('success', 'New code sent to ' . $email);
         } catch (\Exception $e) {
-            return back()->with('success', 'New code: ' . $otp);
+            $error = $e->getMessage();
         }
+        
+        if ($error) {
+            return back()->with('success', 'New code: ' . $otp)->with('mail_error', $error);
+        }
+        
+        return back()->with('success', 'New code sent to ' . $email);
     }
 }

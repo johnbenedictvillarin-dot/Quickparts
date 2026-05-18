@@ -12,7 +12,13 @@
     
     @if(session('success'))
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            {{ session('success') }}
+            {!! session('success') !!}
+        </div>
+    @endif
+    
+    @if(session('mail_error'))
+        <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
+            ⚠️ Email delivery failed: {{ session('mail_error') }}
         </div>
     @endif
     
@@ -54,7 +60,7 @@
     
     <!-- Resend OTP Form -->
     <div class="text-center">
-        <form method="POST" action="{{ route('resend.login.otp') }}" class="inline">
+        <form method="POST" action="{{ session('temp_user_id') ? route('resend.login.otp') : route('resend.otp') }}" class="inline">
             @csrf
             <button type="submit" class="text-blue-600 hover:underline text-sm">
                 Resend Code
