@@ -19,6 +19,7 @@ Route::get('/products/{slug}', [ProductController::class, 'show'])->name('produc
 Route::middleware('guest')->group(function () {
     Route::get('/login', function() {
         session(['test_token' => csrf_token()]);
+        session()->save(); // Force session write
         return view('auth.login');
     })->name('login');
     Route::post('/login', function(\Illuminate\Http\Request $request) {

@@ -43,6 +43,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
         ]);
+        // Temporarily disable CSRF validation for debugging
+        $middleware->validateCsrfTokens(except: ['*']);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
