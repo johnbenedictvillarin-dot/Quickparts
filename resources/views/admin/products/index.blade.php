@@ -32,8 +32,8 @@
                 @foreach($products as $product)
                     <tr class="border-b">
                         <td class="py-2">
-    @if($product->image && file_exists(public_path('storage/' . $product->image)))
-        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-12 h-12 object-cover rounded">
+    @if($product->image)
+        <img src="{{ str_contains($product->image, 'http') ? $product->image : asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-12 h-12 object-cover rounded">
     @else
         <div class="w-12 h-12 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs">No img</div>
     @endif

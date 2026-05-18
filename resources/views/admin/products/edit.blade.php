@@ -43,7 +43,7 @@
                     <label class="block text-gray-700 mb-2">Current Image</label>
                     @if($product->image)
                         <div class="mb-2">
-                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="max-h-48 mx-auto rounded">
+                            <img src="{{ str_contains($product->image, 'http') ? $product->image : asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="max-h-48 mx-auto rounded">
                         </div>
                     @else
                         <div class="bg-gray-100 p-4 text-center rounded mb-2">No image uploaded</div>

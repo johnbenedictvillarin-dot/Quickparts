@@ -67,7 +67,7 @@
                         </div>
                         <div class="h-48 flex items-center justify-center p-4">
                             @if($product->image)
-                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" 
+                                <img src="{{ str_contains($product->image, 'http') ? $product->image : asset('storage/' . $product->image) }}" alt="{{ $product->name }}" 
                                      class="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105">
                             @else
                                 <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">No image</div>

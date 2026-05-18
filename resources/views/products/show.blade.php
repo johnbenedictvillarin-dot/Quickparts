@@ -6,7 +6,7 @@
         <div>
             <div class="h-96 bg-gray-200 rounded-lg flex items-center justify-center">
                 @if($product->image)
-                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover rounded-lg">
+                    <img src="{{ str_contains($product->image, 'http') ? $product->image : asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover rounded-lg">
                 @else
                     <span class="text-gray-400">Product Image</span>
                 @endif
@@ -207,7 +207,7 @@
                     <div class="bg-gray-50 rounded-lg p-4 hover:shadow-lg transition">
                         <div class="h-32 flex items-center justify-center mb-2">
                             @if($related->image)
-                                <img src="{{ asset('storage/' . $related->image) }}" alt="{{ $related->name }}" class="h-full object-contain">
+                                <img src="{{ str_contains($related->image, 'http') ? $related->image : asset('storage/' . $related->image) }}" alt="{{ $related->name }}" class="h-full object-contain">
                             @else
                                 <div class="w-full h-full bg-gray-200 flex items-center justify-center text-xs">No image</div>
                             @endif
