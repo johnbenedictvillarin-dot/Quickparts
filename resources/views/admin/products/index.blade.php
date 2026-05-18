@@ -38,7 +38,11 @@
         <div class="w-12 h-12 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs">No img</div>
     @endif
 </td>
-                        <td class="py-2">{{ $product->name }}</td>
+                        <td class="py-2">
+                            <a href="/products/{{ $product->slug }}" class="text-blue-600 hover:underline" target="_blank">
+                                {{ $product->name }}
+                            </a>
+                        </td>
                         <td class="py-2">{{ $product->category->name }}</td>
                         <td class="py-2">₱{{ number_format($product->price, 2) }}</td>
                         <td class="py-2">
@@ -56,6 +60,7 @@
                             @endif
                         </td>
                         <td class="py-2">
+                            <a href="/products/{{ $product->slug }}" class="text-green-600 hover:underline mr-2" target="_blank">View</a>
                             <a href="{{ route('admin.products.edit', $product) }}" class="text-blue-600 hover:underline mr-2">Edit</a>
                             <form method="POST" action="{{ route('admin.products.delete', $product) }}" class="inline" onsubmit="return confirm('Are you sure you want to delete this product?')">
                                 @csrf

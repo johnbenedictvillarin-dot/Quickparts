@@ -60,7 +60,7 @@ return [
     |
     */
 
-   'files' => '/tmp/laravel/sessions',
+   'files' => sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'laravel' . DIRECTORY_SEPARATOR . 'sessions',
 
     /*
     |--------------------------------------------------------------------------
